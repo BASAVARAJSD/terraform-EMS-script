@@ -1,0 +1,7 @@
+output "instance-1" {
+  value       = "aws_instance.webserver-1"
+}
+
+output "instance-2" {
+  value       = "aws_instance.webserver-2"
+}

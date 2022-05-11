@@ -1,0 +1,64 @@
+
+
+resource "aws_instance" "webserver-1" {
+ami                     = var.ami
+instance_type           = var.instance_type
+availability_zone       = var.availability_zone
+key_name                = var.key_name
+security_groups         = var.security_groups
+
+tags = {
+    Name = "${var.frontend-server_name}"
+    }
+}
+
+resource "aws_instance" "webserver-2" {
+ami                     = var.ami
+instance_type           = var.instance_type
+availability_zone       = var.availability_zone
+key_name                = var.key_name
+security_groups         = var.security_groups
+tags = {
+    Name = "${var.backend-server_name}"
+    }
+}
+
+resource "aws_security_group" "my_sg" {
+     name       = var.name
+     vpc_id     = var.vpc_id
+ingress {
+   from_port    = var.from_port
+   to_port      = var.to_port
+   protocol     = var.protocol
+   cidr_blocks  = var.cidr_blocks
+}
+egress{
+   from_port    = var.from_port
+   to_port      = var.to_port
+   protocol     = var.protocol
+   cidr_blocks  = var.cidr_blocks
+  }
+}
+
+resource "aws_launch_configuration" "custom_launch_config" {
+	name            =  var.name
+	image_id        =  var.image_id
+	instance_type   =  var.instance_type
+	key_name        =  var.key_name
+
+}
+
+resource "aws_autoscaling_group" "custom_group_autoscaling" {
+	name                        = var.name
+	vpc_zone_identifier         = var.vpc_zone_identifier
+  launch_configuration        = aws_launch_configuration.custom_launch_config.name
+	min_size                    = var.min_size
+	max_size                    = var.max_size
+	health_check_grace_period   = var.health_check_grace_period
+	health_check_type           = var.health_check_type
+	force_delete                = var.force_delete
+}
+
+
+
+

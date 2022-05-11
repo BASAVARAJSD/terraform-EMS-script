@@ -1,0 +1,109 @@
+variable "region" {
+  default     = "us-east-1a"
+}
+
+variable "ACCESS_KEY" {
+    default     = "AKIAQM2DYDNK2Q4N4PVE"
+}
+
+variable "SECRETE_KEY" {
+    default     = "wbrXKZdnEE53AADT6sqPU1FxB9EAI3MT8zojZmNH"
+}
+
+variable "vpc_id" {
+  default     = "vpc-0e5b23ce5cca9714d"
+}
+
+variable "vpc_cidr_blocks" {
+  default     = "172.31.0.0/16"
+}
+
+variable "frontend-server_name" {
+  type        = string
+  default     = "webserver-1"
+}
+
+variable "backend-server_name" {
+  type        = string
+  default     = "webserver-2"
+}
+
+variable "ami" {
+  default     = "ami-0c4f7023847b90238"
+}
+
+variable "instance_type" {
+  default     = "t2.micro"
+}
+
+variable "key_name" {
+  default     = "Webapp"
+}
+
+variable "availability_zone" {
+  default     = "us-east-1a"
+}
+
+variable "name" {
+  default     = "allow_protocol"
+}
+
+variable "from_port" {
+  default     = "443"
+}
+
+variable "to_port" {
+  default     = "443"
+}
+
+variable "protocol" {
+  default     = "tcp"
+}
+
+variable "cidr_blocks" {
+  default     = ["0.0.0.0/0"]
+}
+
+variable "image_id" {
+  default     = "ami-0c4f7023847b90238"
+}
+
+variable "max_size" {
+  default = "5"
+}
+
+variable "min_size" {
+  default = "2"
+}
+
+variable "health_check_grace_period" {
+  default = "300"
+}
+
+variable "health_check_type" {
+  default = "EC2"
+}
+
+variable "desired_capacity" {
+  default = "4"
+}
+variable "force_delete" {
+  default = true
+}
+
+variable "aws_launch_configuration" {
+  default = "custom_launch_config"
+}
+
+variable "aws_autoscaling_group" {
+  default = "custom_group_autoscaling"
+}
+
+variable "vpc_zone_identifier" {
+  default = ["subnet-0cd1ffdb6c9668b9f"]
+}
+
+variable "security_groups" {
+  type        = list(string)
+  default     = ["sg-062edab7ac5b93820"]
+}

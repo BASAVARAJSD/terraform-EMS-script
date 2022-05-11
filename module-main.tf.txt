@@ -1,0 +1,67 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
+module "frontend-server" {
+  source                = "./modules/webserver"
+  vpc_id                =  "aws_vpc.main.id"
+  webserver_name        =  "webserver-1"
+  ami                   =  "ami-0c4f7023847b90238"
+  vpc_cidr_blocks       =  "172.31.0.0/16"
+  instance_type         =  "t2.micro"
+  key_name              =  "Webapp"
+  availability_zone     =  "us-east-1a"
+  vpc_security_group_ids=  "sg-062edab7ac5b93820"
+}
+
+module "backend-server" {
+  source                 = "./modules/webserver"
+  vpc_id                 =  "aws_vpc.main.id"
+  vpc_cidr_blocks        =  "172.31.0.0/16"
+  webserver_name         =  "webserver-2"
+  ami                    =  "ami-0c4f7023847b90238"
+  instance_type          =  "t2.micro"
+  key_name               =  "Webapp"
+  availability_zone      =  "us-east-1a"
+  vpc_security_group_ids =  "sg-062edab7ac5b93820"
+}
+
+module "security_group" {
+   source       = "./modules/webserver"
+ingress {
+   from_port    =  443
+   to_port      =  443
+   protocol     = "tcp"
+   cidr_blocks  = ["0.0.0.0/0"]
+}
+egress{
+   from_port    =   0
+   to_port      =   0
+   protocol     = "-1"
+   cidr_blocks  = ["0.0.0.0/0"]
+ }
+}
+
+output "security_group_data" {
+    value = module.security_group_data.security_group
+}
+
+ module "launch_configuration" {
+   source          = "./modules/webserver"
+   name            = "custom_launch_config"
+   image_id        = "AKIAQM2DYDNK2Q4N4PVE"
+   instance_type   = "t2.micro"
+   key_name        = "webapp"
+ }
+
+ module "aws_autoscaling_group" {
+   source                      = "./modules/webserver"
+   name                        = "custom_group_autoscaling"
+   vpc_zone_identifier         = "subnet-0cd1ffdb6c9668b9f"
+   launch_configuration        =  aws_launch_configuration.custom_launch_config.name
+   min_size                    =  2
+   max_size                    =  5
+   health_check_grace_period   =  300
+   health_check_type           =  "EC2"
+   force_delete                =  true
+ }
